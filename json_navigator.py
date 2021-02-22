@@ -4,8 +4,9 @@ LAB 3 TASK 2
 GitHub: https://github.com/S-Daria/LAB3_TASK2.git
 """
 
-import json
+# import json
 import requests
+
 
 def twitter_api(username):
     """
@@ -14,7 +15,8 @@ def twitter_api(username):
     """
     base_url = "https://api.twitter.com/"
 
-    bearer_token = 'AAAAAAAAAAAAAAAAAAAAADQPNAEAAAAA6du3%2BUc7ar3Jo4k58Hci0ppycks%3DKZGTOe97mEBgTeM9mAqAtqqiFn99qLwZ5p0UxO784psV9TzgBE'
+    bearer_token = 'AAAAAAAAAAAAAAAAAAAAADQPNAEAAAAA6du3%2BUc7ar3Jo4k58Hci0\
+ppycks%3DKZGTOe97mEBgTeM9mAqAtqqiFn99qLwZ5p0UxO784psV9TzgBE'
     search_url = f'{base_url}1.1/friends/list.json'
 
     search_headers = {
@@ -47,19 +49,18 @@ def twitter_api(username):
 def choose_key(data_dict: dict) -> object:
     """
     get dictionary
-    let the user choose the key 
+    let the user choose the key
     return choice
     """
     print('******************************************************')
-    print(f'please, choose a key from presented below:')
+    print('please, choose a key from presented below:')
     for key in data_dict.keys():
         print(key)
     chosen_key = input('enter your choice: ')
     while chosen_key not in data_dict.keys():
         print('invalid key, please, choose again')
         chosen_key = input('*** enter your choice: ')
-    else:
-        return chosen_key
+    return chosen_key
 
 
 def choose_index(data_list: list) -> int:
@@ -77,13 +78,12 @@ def choose_index(data_list: list) -> int:
     while chosen_index not in [str(i) for i in range(-1, len(data_list))]:
         print('invalid index, please, choose again')
         chosen_index = input('*** enter your choice: ')
-    else:
-        return int(chosen_index)
+    return int(chosen_index)
 
 
 def type_check(current_object):
     """
-    get the next objects 
+    get the next objects
     checks type of the object
     call needed function based on type
     return what the called function returned or
@@ -91,15 +91,14 @@ def type_check(current_object):
     """
     if isinstance(current_object, dict):
         return choose_key(current_object)
-    elif isinstance(current_object, list):
+    if isinstance(current_object, list):
         return choose_index(current_object)
-    else:
-        return False
+    return False
 
 
 def navigator(json_dict: dict):
     """
-    get json file as dictionary object 
+    get json file as dictionary object
     navigates through dict be interacting with user
     return None
     """
@@ -113,8 +112,12 @@ def navigator(json_dict: dict):
 
 
 def main():
+    """
+    navigate through the friends list from twitter of a input user
+    """
     username = input("Enter twitter user tag in format @name: ")
     decoded_object = twitter_api(username)
     navigator(decoded_object)
+
 
 main()
