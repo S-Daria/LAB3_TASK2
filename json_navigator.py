@@ -5,22 +5,44 @@ GitHub: https://github.com/S-Daria/LAB3_TASK2.git
 """
 
 import json
+import requests
 
-
-def json_decoding(path: str) -> dict:
+def twitter_api(username):
     """
-    get json file
-    return dict object with contents of the file
+    Get twitter username
+    return .json file with friends list of a user with given username from twitter
     """
-    with open(path, 'r', encoding='utf-8') as file:
-        decoded_kved = json.load(file)
-        return decoded_kved
+    base_url = "https://api.twitter.com/"
 
-path = "friends_list_Obama.json"
-decoded_object = json_decoding(path)
+    bearer_token = 'AAAAAAAAAAAAAAAAAAAAADQPNAEAAAAA6du3%2BUc7ar3Jo4k58Hci0ppycks%3DKZGTOe97mEBgTeM9mAqAtqqiFn99qLwZ5p0UxO784psV9TzgBE'
+    search_url = f'{base_url}1.1/friends/list.json'
 
-# print(decoded_object.keys())
-# print(decoded_object['users'][0].keys())
+    search_headers = {
+        'Authorization': f'Bearer {bearer_token}'
+    }
+
+    search_params = {
+        'screen_name': username,
+        'count': 15
+    }
+
+    response = requests.get(
+        search_url, headers=search_headers, params=search_params)
+    return response.json()
+
+
+# def json_decoding(path: str) -> dict:
+#     """
+#     get json file
+#     return dict object with contents of the file
+#     """
+#     with open(path, 'r', encoding='utf-8') as file:
+#         decoded_kved = json.load(file)
+#         return decoded_kved
+
+# path = "friends_list_Obama.json"
+# decoded_object = json_decoding(path)
+
 
 def choose_key(data_dict: dict) -> object:
     """
@@ -56,15 +78,17 @@ def choose_index(data_list: list) -> int:
         print('invalid index, please, choose again')
         chosen_index = input('*** enter your choice: ')
     else:
-        # if chosen_index == '-1':
-        #     return False
         return int(chosen_index)
 
-# print(print_keys(decoded_object))
-
-# choose_index(decoded_object['users'])
 
 def type_check(current_object):
+    """
+    get the next objects 
+    checks type of the object
+    call needed function based on type
+    return what the called function returned or
+    if the type is not list or dict - return False
+    """
     if isinstance(current_object, dict):
         return choose_key(current_object)
     elif isinstance(current_object, list):
@@ -81,10 +105,16 @@ def navigator(json_dict: dict):
     """
     current_object = json_dict
     chosen = type_check(current_object)
-    while str(chosen) == '0' or chosen:
+    while chosen != -1 and (str(chosen) == '0' or chosen):
         current_object = current_object[chosen]
         chosen = type_check(current_object)
     print('******************************************************')
     print(current_object)
 
-navigator(decoded_object)
+
+def main():
+    username = input("Enter twitter user tag in format @name: ")
+    decoded_object = twitter_api(username)
+    navigator(decoded_object)
+
+main()
